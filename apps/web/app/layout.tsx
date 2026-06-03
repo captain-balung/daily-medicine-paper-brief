@@ -22,6 +22,7 @@ export default function RootLayout({
                 <a href="/">Today</a>
                 <a href="/daily">Daily</a>
                 <a href="/articles">Articles</a>
+                <a href="/admin/status">Status</a>
                 <a href="/admin/setup">Setup</a>
               </nav>
             </div>

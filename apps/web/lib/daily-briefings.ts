@@ -1,5 +1,16 @@
 import { createSupabaseClient } from "@/lib/supabase";
 
+export type ArticleScore = {
+  clinical_impact: number;
+  evidence_strength: number;
+  novelty: number;
+  specialty_relevance: number;
+  teaching_research_value: number;
+  total_score: number;
+  recommendation_level: string;
+  scoring_rationale: string | null;
+};
+
 export type DailyBriefingItem = {
   section: string;
   rank: number | null;
@@ -15,10 +26,7 @@ export type DailyBriefingItem = {
     url: string | null;
     access_status: string;
     article_type: string | null;
-    score?: {
-      total_score: number;
-      recommendation_level: string;
-    } | null;
+    score?: ArticleScore | null;
   } | null;
 };
 
@@ -194,16 +202,18 @@ async function getDailyPodcast(briefingId: string): Promise<DailyPodcast | null>
   return data ?? null;
 }
 
-async function getScores(articleIds: string[]) {
+async function getScores(articleIds: string[]): Promise<Map<string, ArticleScore>> {
   const supabase = createSupabaseClient();
   const uniqueIds = [...new Set(articleIds)];
   if (!uniqueIds.length) {
-    return new Map<string, { total_score: number; recommendation_level: string }>();
+    return new Map<string, ArticleScore>();
   }
 
   const { data, error } = await supabase
     .from("article_scores")
-    .select("article_id, total_score, recommendation_level")
+    .select(
+      "article_id, clinical_impact, evidence_strength, novelty, specialty_relevance, teaching_research_value, total_score, recommendation_level, scoring_rationale",
+    )
     .in("article_id", uniqueIds);
 
   if (error) {
@@ -214,8 +224,14 @@ async function getScores(articleIds: string[]) {
     (data ?? []).map((score) => [
       score.article_id,
       {
+        clinical_impact: score.clinical_impact,
+        evidence_strength: score.evidence_strength,
+        novelty: score.novelty,
+        specialty_relevance: score.specialty_relevance,
+        teaching_research_value: score.teaching_research_value,
         total_score: score.total_score,
         recommendation_level: score.recommendation_level,
+        scoring_rationale: score.scoring_rationale,
       },
     ]),
   );

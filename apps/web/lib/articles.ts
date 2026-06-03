@@ -51,7 +51,9 @@ export async function getAnalyzedArticleItems(
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("article_scores")
-    .select("article_id, total_score, recommendation_level")
+    .select(
+      "article_id, clinical_impact, evidence_strength, novelty, specialty_relevance, teaching_research_value, total_score, recommendation_level, scoring_rationale",
+    )
     .order("total_score", { ascending: false })
     .limit(limit);
 
@@ -74,8 +76,14 @@ export async function getAnalyzedArticleItems(
       article: {
         ...article,
         score: {
+          clinical_impact: score.clinical_impact,
+          evidence_strength: score.evidence_strength,
+          novelty: score.novelty,
+          specialty_relevance: score.specialty_relevance,
+          teaching_research_value: score.teaching_research_value,
           total_score: score.total_score,
           recommendation_level: score.recommendation_level,
+          scoring_rationale: score.scoring_rationale,
         },
       },
     });

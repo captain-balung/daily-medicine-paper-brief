@@ -18,7 +18,7 @@ Production:
 
 - Next.js web app scaffolded.
 - Supabase schema migrations applied.
-- Public RLS policies configured for published briefings, articles, summaries, scores, topics, and podcast scripts.
+- Public RLS policies configured for published briefings, articles, summaries, scores, topics, podcast scripts, podcast audio, and read-only pipeline status.
 - Vercel production deployment is live.
 - Render CLI installed locally and Render workspace configured.
 
@@ -39,8 +39,10 @@ Production:
 - `/daily` and `/daily/YYYY-MM-DD` pages work.
 - `/articles` list works.
 - `/articles/[id]` detail pages work.
-- `UNKNOWN` access status is displayed as `全文狀態待確認`.
+- `UNKNOWN` access status is displayed as `Full text unknown` with explanatory help text.
 - Top Ranking includes topic weighting for nephrology, CKD, dialysis, cardiovascular, metabolism, AI medicine, internal medicine, and basic-translational topics.
+- Article cards show ranking rationale, score signals, recommendation level, and access-status explanation.
+- `/admin/status` shows recent pipeline jobs, pipeline events, latest briefing status, podcast script status, and podcast audio status.
 
 ### Podcast
 
@@ -65,11 +67,12 @@ Production:
 2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
 3. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
 4. Improve article list filtering and sorting for physician review.
-5. Add visible ranking rationale to explain why each article is selected.
+5. Review ranking rationale wording with physician feedback.
 
 ## Operating Notes
 
 - The first version now includes daily briefing, podcast script, and optional OpenAI TTS audio.
 - Audio generation is optional in the pipeline and is skipped if `OPENAI_API_KEY` is not configured.
 - Physician feedback can be collected conversationally; no feedback UI is planned for now.
+- Pipeline status is public read-only and does not expose backend secrets.
 - Do not expose backend secrets in Vercel or the browser.

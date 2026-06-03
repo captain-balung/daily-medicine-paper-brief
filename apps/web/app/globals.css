@@ -194,7 +194,7 @@ a {
 
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 180px));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 16px;
   margin: 0 0 18px;
 }
@@ -207,6 +207,10 @@ a {
 .stat-value {
   font-size: 28px;
   font-weight: 700;
+}
+
+.stat-warning {
+  color: var(--warning);
 }
 
 .stat-label {
@@ -243,6 +247,65 @@ a {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
+}
+
+.ranking-rationale {
+  display: grid;
+  gap: 8px;
+  border-left: 3px solid var(--accent);
+  padding: 10px 0 10px 12px;
+  background: #f4fbf9;
+}
+
+.rationale-title {
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ranking-rationale ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.rationale-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.status-stats {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.job-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.event-list {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.event-row {
+  display: grid;
+  gap: 3px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.event-row strong {
+  color: var(--foreground);
 }
 
 @media (max-width: 760px) {

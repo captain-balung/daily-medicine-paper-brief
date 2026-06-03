@@ -26,7 +26,7 @@ export default async function DailyBriefingPage({
 
       <section className="grid">
         <article className="panel wide">
-          <h2>資料時間窗</h2>
+          <h2>Source window</h2>
           <p>
             {new Date(briefing.source_window_start).toLocaleString("zh-TW")} to{" "}
             {new Date(briefing.source_window_end).toLocaleString("zh-TW")}
@@ -48,7 +48,7 @@ export default async function DailyBriefingPage({
 
         {briefing.clinical_basic_section ? (
           <article className="panel wide">
-            <h2>臨床與基礎轉譯</h2>
+            <h2>Clinical-basic translation</h2>
             <p>{briefing.clinical_basic_section}</p>
           </article>
         ) : null}
@@ -58,9 +58,11 @@ export default async function DailyBriefingPage({
         ) : null}
 
         <article className="panel wide">
-          <h2>聲明</h2>
+          <h2>Notes</h2>
           <p>
-            本簡報為 AI 輔助整理，根據 metadata、摘要與來源連結產生，不構成臨床決策建議。
+            This briefing is AI-generated from source metadata and article
+            analysis. It should be used for research awareness and discussion,
+            not as clinical guidance.
           </p>
         </article>
       </section>

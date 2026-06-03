@@ -25,10 +25,11 @@ export default async function HomePage() {
 
       <section className="grid">
         <article className="panel wide">
-          <h2>今日總覽</h2>
+          <h2>Daily overview</h2>
           <p>
-            本日簡報由 PubMed Core source、Crossref metadata、Unpaywall access
-            label 與 Anthropic AI 分析自動產生。
+            This briefing is generated from PubMed Core source data, Crossref
+            metadata, Unpaywall access labels, Anthropic analysis, and optional
+            OpenAI TTS podcast audio.
           </p>
           <span className="badge">Published</span>
         </article>
@@ -42,7 +43,7 @@ export default async function HomePage() {
 
         {briefing.clinical_basic_section ? (
           <article className="panel wide">
-            <h2>臨床與基礎轉譯</h2>
+            <h2>Clinical-basic translation</h2>
             <p>{briefing.clinical_basic_section}</p>
           </article>
         ) : null}
