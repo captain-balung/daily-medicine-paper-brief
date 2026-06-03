@@ -49,7 +49,7 @@ Production:
 - Manual OpenAI TTS audio generation is implemented.
 - MP3 files are uploaded to Supabase Storage.
 - Homepage and daily pages display the podcast script and audio player when audio is available.
-- Render daily pipeline is being updated to generate audio after the script.
+- Render daily pipeline generates podcast audio after the script when `OPENAI_API_KEY` is configured.
 
 ## Deferred
 
@@ -61,15 +61,15 @@ Production:
 
 ## Next Recommended Work
 
-1. Review the first podcast script for tone, length, and medical depth.
-2. Adjust podcast prompt style if needed.
-3. Improve article list filtering and sorting for physician review.
-4. Add visible ranking rationale to explain why each article is selected.
-5. Monitor the first overnight Render Cron run.
+1. Review the first automated podcast audio run from Render Cron.
+2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
+3. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
+4. Improve article list filtering and sorting for physician review.
+5. Add visible ranking rationale to explain why each article is selected.
 
 ## Operating Notes
 
-- The first version remains text-first: daily briefing plus podcast script.
-- Audio/TTS should start only after the script style is stable.
+- The first version now includes daily briefing, podcast script, and optional OpenAI TTS audio.
+- Audio generation is optional in the pipeline and is skipped if `OPENAI_API_KEY` is not configured.
 - Physician feedback can be collected conversationally; no feedback UI is planned for now.
 - Do not expose backend secrets in Vercel or the browser.
