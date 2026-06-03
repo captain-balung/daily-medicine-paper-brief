@@ -1,5 +1,5 @@
-import { ArticleCard } from "@/components/article-card";
 import { ContentNotice } from "@/components/content-notice";
+import { FeaturedAnalysis } from "@/components/featured-analysis";
 import { PodcastPanel } from "@/components/podcast-panel";
 import { RankingSummary } from "@/components/ranking-summary";
 import { getLatestDailyBriefing } from "@/lib/daily-briefings";
@@ -19,6 +19,7 @@ export default async function HomePage() {
   }
 
   const mustRead = briefing.items.filter((item) => item.section === "must_read");
+  const deepDive = briefing.items.find((item) => item.section === "deep_dive");
 
   return (
     <main className="page">
@@ -40,12 +41,7 @@ export default async function HomePage() {
 
         <RankingSummary items={mustRead} />
 
-        {mustRead.map((item) => (
-          <ArticleCard
-            item={item}
-            key={`${item.section}-${item.rank}-${item.article?.id}`}
-          />
-        ))}
+        <FeaturedAnalysis mustRead={mustRead} deepDive={deepDive} />
 
         {briefing.clinical_basic_section ? (
           <article className="panel wide">

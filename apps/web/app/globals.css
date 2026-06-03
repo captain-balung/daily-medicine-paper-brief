@@ -110,6 +110,16 @@ a {
   margin-bottom: 0;
 }
 
+.section-intro {
+  padding-bottom: 14px;
+}
+
+.section-intro p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .article-card h2 {
   margin-bottom: 0;
   line-height: 1.35;

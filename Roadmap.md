@@ -1,6 +1,6 @@
 # Daily Medicine Paper Brief Roadmap
 
-Last updated: 2026-06-03
+Last updated: 2026-06-04
 
 ## Current Status
 
@@ -44,6 +44,7 @@ Production:
 - Article cards show ranking rationale, score signals, recommendation level, and access-status explanation.
 - `/admin/status` shows recent pipeline jobs, pipeline events, latest briefing status, podcast script status, and podcast audio status.
 - Homepage and daily briefing pages show a `Today's Top Ranking` summary table.
+- Homepage and daily briefing pages use a two-level hierarchy: Top Ranking table for overview and `Featured analysis` cards for deeper reading.
 - `/articles` supports filtering by access status, article type, minimum score, and sorting by score, clinical impact, or publication date.
 - `/articles/[id]` uses a journal-club layout with bottom line, why it matters, study design, key findings, limitations, ranking rationale, source/access, and relevance sections.
 - Copyright-safe presentation is in place: pages show source/use notices, article detail pages no longer republish full original abstracts, and source links are emphasized for original abstract/full text/license verification.
@@ -69,11 +70,11 @@ Production:
 
 ## Next Recommended Work
 
-1. Review the first automated podcast audio run from Render Cron.
-2. Check `/admin/status` and `/daily` after the next 06:30 Taiwan Render Cron run.
-3. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
-4. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
-5. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
+1. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
+2. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
+3. Review ranking rationale wording with physician feedback.
+4. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
+5. Explore weekly briefing once daily review stabilizes.
 
 ## Operating Notes
 
