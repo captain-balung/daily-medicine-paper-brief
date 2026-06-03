@@ -47,6 +47,8 @@ Production:
 - `/articles` supports filtering by access status, article type, minimum score, and sorting by score, clinical impact, or publication date.
 - `/articles/[id]` uses a journal-club layout with bottom line, why it matters, study design, key findings, limitations, ranking rationale, source/access, and relevance sections.
 - Copyright-safe presentation is in place: pages show source/use notices, article detail pages no longer republish full original abstracts, and source links are emphasized for original abstract/full text/license verification.
+- `/daily` shows a recent daily briefing list so new automated runs are easy to find.
+- Daily pipeline updates `pipeline_jobs.total_analyzed` after AI analysis.
 
 ### Podcast
 
@@ -68,9 +70,9 @@ Production:
 ## Next Recommended Work
 
 1. Review the first automated podcast audio run from Render Cron.
-2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
-3. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
-4. Review ranking rationale wording with physician feedback.
+2. Check `/admin/status` and `/daily` after the next 06:30 Taiwan Render Cron run.
+3. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
+4. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
 5. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
 
 ## Operating Notes

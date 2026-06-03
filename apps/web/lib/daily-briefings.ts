@@ -114,6 +114,26 @@ export async function getLatestDailyBriefing(): Promise<DailyBriefing | null> {
   return hydrateDailyBriefing(data);
 }
 
+export async function getDailyBriefingList(
+  limit: number = 14,
+): Promise<DailyBriefingRow[]> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("daily_briefings")
+    .select(
+      "id, briefing_date, title, status, summary, trend_overview, clinical_basic_section, interesting_medicine_section, source_window_start, source_window_end",
+    )
+    .eq("status", "published")
+    .order("briefing_date", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as DailyBriefingRow[];
+}
+
 export async function getDailyBriefingByDate(
   date: string,
 ): Promise<DailyBriefing | null> {

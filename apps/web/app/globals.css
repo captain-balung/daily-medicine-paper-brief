@@ -101,6 +101,15 @@ a {
   gap: 10px;
 }
 
+.daily-list-card {
+  display: grid;
+  gap: 12px;
+}
+
+.daily-list-card h2 {
+  margin-bottom: 0;
+}
+
 .article-card h2 {
   margin-bottom: 0;
   line-height: 1.35;

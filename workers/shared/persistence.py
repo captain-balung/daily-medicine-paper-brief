@@ -46,6 +46,23 @@ class PipelineRepository:
             },
         )
 
+    def update_job_counts(
+        self,
+        job_id: str,
+        *,
+        total_analyzed: int | None = None,
+        total_failed: int | None = None,
+    ) -> None:
+        payload = {}
+        if total_analyzed is not None:
+            payload["total_analyzed"] = total_analyzed
+        if total_failed is not None:
+            payload["total_failed"] = total_failed
+        if not payload:
+            return
+
+        self.client.patch("pipeline_jobs", {"id": f"eq.{job_id}"}, payload)
+
     def log_event(
         self,
         job_id: str,

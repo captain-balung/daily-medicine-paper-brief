@@ -31,6 +31,11 @@ def run_full_daily_pipeline(ai_limit: int, dry_run: bool = False) -> int:
         f"failed:{ai_result['failed']}"
     )
     if job_id:
+        repository.update_job_counts(
+            job_id,
+            total_analyzed=ai_result["analyzed"],
+            total_failed=ai_result["failed"],
+        )
         repository.log_event(
             job_id,
             event_type="info",
