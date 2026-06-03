@@ -21,3 +21,5 @@ Thumbs.db
 *.log
 
 supabase/.temp/
+
+.vercel
