@@ -42,19 +42,18 @@ Production:
 - `UNKNOWN` access status is displayed as `全文狀態待確認`.
 - Top Ranking includes topic weighting for nephrology, CKD, dialysis, cardiovascular, metabolism, AI medicine, internal medicine, and basic-translational topics.
 
-### Podcast Script
+### Podcast
 
 - Daily podcast script generation is implemented.
 - Podcast scripts are stored in Supabase `podcasts`.
-- Homepage and daily pages display the podcast script.
-- No audio or TTS is implemented yet.
+- Manual OpenAI TTS audio generation is implemented.
+- MP3 files are uploaded to Supabase Storage.
+- Homepage and daily pages display the podcast script and audio player when audio is available.
+- Render daily pipeline is being updated to generate audio after the script.
 
 ## Deferred
 
-- Audio generation.
-- TTS provider selection.
-- Supabase Storage for MP3 files.
-- Podcast player.
+- TTS provider comparison and voice tuning.
 - Weekly briefing.
 - Search, filters, bookmarks, notes, and personalization.
 - Full admin dashboard.

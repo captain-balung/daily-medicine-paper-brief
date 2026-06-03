@@ -8,6 +8,7 @@ Medical research intelligence MVP for daily Chinese briefings.
 - AI provider: Anthropic
 - Publication mode: auto-publish after setup and safety checks pass
 - Podcast scripts are generated; trial OpenAI TTS audio can be generated manually
+- Render Cron can generate OpenAI TTS MP3 audio after each daily script
 - No manual review flow in the first version
 
 ## Project layout

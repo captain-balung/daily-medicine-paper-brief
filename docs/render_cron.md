@@ -36,9 +36,8 @@ python -m workers.daily_pipeline.full_run --ai-limit 10
 ```
 
 The full run collects/enriches articles, analyzes up to `DAILY_AI_LIMIT` new
-articles, generates the daily briefing, and generates a daily podcast script.
-It does not automatically generate audio yet; TTS audio is generated manually
-until voice quality is approved.
+articles, generates the daily briefing, generates a daily podcast script, and
+generates OpenAI TTS audio for the script.
 
 ## Required Render Secrets
 
@@ -57,8 +56,7 @@ NCBI_API_KEY=
 ```
 
 `NCBI_API_KEY` improves PubMed API reliability, but the MVP can run without it.
-`OPENAI_API_KEY` is needed only when TTS audio generation is enabled or run
-manually.
+`OPENAI_API_KEY` is required for TTS audio generation.
 
 Do not commit these values.
 

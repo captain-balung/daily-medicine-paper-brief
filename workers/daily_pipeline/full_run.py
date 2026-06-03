@@ -2,6 +2,7 @@ import argparse
 
 from workers.ai_analysis.run import run_ai_analysis
 from workers.daily_pipeline.generate_briefing import generate_daily_briefing
+from workers.daily_pipeline.generate_podcast_audio import generate_podcast_audio
 from workers.daily_pipeline.generate_podcast_script import generate_daily_podcast_script
 from workers.daily_pipeline.main import run_daily_pipeline
 from workers.shared.config import load_settings
@@ -59,6 +60,26 @@ def run_full_daily_pipeline(ai_limit: int, dry_run: bool = False) -> int:
             step_name="daily_podcast_script",
             message=f"Generated daily podcast script {podcast_id}.",
         )
+
+    if settings.openai_api_key:
+        audio_url = generate_podcast_audio(podcast_id)
+        print(f"daily_podcast_audio={audio_url}")
+        if job_id:
+            repository.log_event(
+                job_id,
+                event_type="info",
+                step_name="daily_podcast_audio",
+                message=f"Generated daily podcast audio for script {podcast_id}.",
+            )
+    else:
+        print("daily_podcast_audio=skipped:missing_openai_api_key")
+        if job_id:
+            repository.log_event(
+                job_id,
+                event_type="warning",
+                step_name="daily_podcast_audio",
+                message="Skipped daily podcast audio because OPENAI_API_KEY is missing.",
+            )
     return 0 if ai_result["failed"] == 0 else 1
 
 
