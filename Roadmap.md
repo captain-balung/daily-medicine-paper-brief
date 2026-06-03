@@ -45,6 +45,7 @@ Production:
 - `/admin/status` shows recent pipeline jobs, pipeline events, latest briefing status, podcast script status, and podcast audio status.
 - Homepage and daily briefing pages show a `Today's Top Ranking` summary table.
 - `/articles` supports filtering by access status, article type, minimum score, and sorting by score, clinical impact, or publication date.
+- `/articles/[id]` uses a journal-club layout with bottom line, why it matters, study design, key findings, limitations, ranking rationale, source/access, and relevance sections.
 
 ### Podcast
 
@@ -69,7 +70,7 @@ Production:
 2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
 3. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
 4. Review ranking rationale wording with physician feedback.
-5. Refine article detail pages into a more journal-club-like format.
+5. Add discussion prompts or take-home questions if physician readers want more journal-club support.
 
 ## Operating Notes
 

@@ -158,6 +158,78 @@ a {
   line-height: 1.65;
 }
 
+.journal-club-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 0.9fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.journal-main {
+  display: grid;
+  gap: 18px;
+}
+
+.journal-section {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.journal-section:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.journal-section h3 {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 15px;
+}
+
+.journal-section p {
+  margin: 0;
+}
+
+.journal-sidebar {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.journal-secondary {
+  margin-top: 16px;
+}
+
+.score-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.score-total {
+  display: grid;
+  gap: 2px;
+}
+
+.score-total strong {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.score-total span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
 .status-list {
   display: grid;
   gap: 10px;
@@ -424,6 +496,10 @@ a {
   }
 
   .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .journal-club-layout {
     grid-template-columns: 1fr;
   }
 
