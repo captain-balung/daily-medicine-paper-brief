@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/article-card";
+import { ContentNotice } from "@/components/content-notice";
 import { PodcastPanel } from "@/components/podcast-panel";
 import { RankingSummary } from "@/components/ranking-summary";
 import { getDailyBriefingByDate } from "@/lib/daily-briefings";
@@ -33,6 +34,8 @@ export default async function DailyBriefingPage({
             {new Date(briefing.source_window_end).toLocaleString("zh-TW")}
           </p>
         </article>
+
+        <ContentNotice />
 
         <RankingSummary items={mustRead} />
 

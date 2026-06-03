@@ -1,4 +1,5 @@
 import { ArticleCard } from "@/components/article-card";
+import { ContentNotice } from "@/components/content-notice";
 import { PodcastPanel } from "@/components/podcast-panel";
 import { RankingSummary } from "@/components/ranking-summary";
 import { getLatestDailyBriefing } from "@/lib/daily-briefings";
@@ -34,6 +35,8 @@ export default async function HomePage() {
           </p>
           <span className="badge">Published</span>
         </article>
+
+        <ContentNotice />
 
         <RankingSummary items={mustRead} />
 

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { ContentNotice } from "@/components/content-notice";
 import { getArticleDetail, type ArticleDetail } from "@/lib/articles";
 import {
   accessStatusHelp,
@@ -67,6 +68,7 @@ export default async function ArticlePage({
         </article>
 
         <aside className="journal-sidebar">
+          <ContentNotice compact />
           <ScorePanel article={article} />
           <ArticleMetaPanel article={article} />
         </aside>
@@ -95,11 +97,19 @@ export default async function ArticlePage({
           </>
         ) : null}
 
-        {article.abstract ? (
-          <DetailPanel title="Abstract" wide>
-            <p>{article.abstract}</p>
-          </DetailPanel>
-        ) : null}
+        <DetailPanel title="Original abstract and full text" wide>
+          <p>
+            To avoid republishing publisher-controlled content, this site does
+            not display the full original abstract or full text. Please use the
+            source link, PMID, or DOI above to verify the publisher abstract,
+            full article, and license terms.
+          </p>
+          {article.url ? (
+            <a className="text-link" href={article.url} target="_blank">
+              Open original source
+            </a>
+          ) : null}
+        </DetailPanel>
       </section>
     </main>
   );
@@ -198,6 +208,11 @@ function ArticleMetaPanel({ article }: { article: ArticleDetail }) {
         </li>
       </ul>
       <p className="rationale-note">{accessStatusHelp(article.access_status)}</p>
+      <p className="rationale-note">
+        Attribution: article title, journal, PMID, DOI, and source links are
+        shown for citation and verification. Publisher abstracts and full text
+        remain governed by the original source and license terms.
+      </p>
       {article.summary?.access_warning ? (
         <p className="rationale-note">{article.summary.access_warning}</p>
       ) : null}

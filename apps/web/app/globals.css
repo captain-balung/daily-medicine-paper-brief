@@ -325,6 +325,38 @@ a {
   line-height: 1.5;
 }
 
+.content-notice {
+  border-color: #f1d4a7;
+  background: #fffaf2;
+}
+
+.content-notice h2 {
+  color: var(--warning);
+}
+
+.content-notice p {
+  margin: 0 0 8px;
+  color: #6b4b16;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.content-notice p:last-child {
+  margin-bottom: 0;
+}
+
+.content-notice-compact {
+  padding: 16px;
+}
+
+.content-notice-compact h2 {
+  font-size: 16px;
+}
+
+.content-notice-compact p {
+  font-size: 13px;
+}
+
 .ranking-rationale {
   display: grid;
   gap: 8px;

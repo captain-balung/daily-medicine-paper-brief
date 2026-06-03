@@ -46,6 +46,7 @@ Production:
 - Homepage and daily briefing pages show a `Today's Top Ranking` summary table.
 - `/articles` supports filtering by access status, article type, minimum score, and sorting by score, clinical impact, or publication date.
 - `/articles/[id]` uses a journal-club layout with bottom line, why it matters, study design, key findings, limitations, ranking rationale, source/access, and relevance sections.
+- Copyright-safe presentation is in place: pages show source/use notices, article detail pages no longer republish full original abstracts, and source links are emphasized for original abstract/full text/license verification.
 
 ### Podcast
 
@@ -70,7 +71,7 @@ Production:
 2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
 3. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
 4. Review ranking rationale wording with physician feedback.
-5. Add discussion prompts or take-home questions if physician readers want more journal-club support.
+5. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
 
 ## Operating Notes
 

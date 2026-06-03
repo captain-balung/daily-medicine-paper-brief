@@ -1,4 +1,5 @@
 import { ArticleCard } from "@/components/article-card";
+import { ContentNotice } from "@/components/content-notice";
 import { getAnalyzedArticleItems } from "@/lib/articles";
 import type { DailyBriefingItem } from "@/lib/daily-briefings";
 
@@ -36,6 +37,8 @@ export default async function ArticlesIndexPage({
       </p>
 
       <FilterPanel params={params} articleTypes={articleTypes} />
+
+      <ContentNotice />
 
       <section className="stats-row">
         <div className="panel stat-panel">
