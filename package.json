@@ -1,0 +1,17 @@
+{
+  "name": "daily-medicine-paper-brief",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm --workspace apps/web run dev",
+    "build": "npm --workspace apps/web run build",
+    "lint": "npm --workspace apps/web run lint"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.0",
+    "pg": "^8.21.0",
+    "supabase": "^2.104.0"
+  }
+}
