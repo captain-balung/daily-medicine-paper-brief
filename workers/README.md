@@ -9,7 +9,7 @@ First-version scope:
 - Anthropic for AI analysis
 - Auto-publish after readiness and safety checks pass
 - Daily podcast script generation
-- No audio or TTS yet
+- Manual OpenAI TTS audio generation for podcast script trials
 
 ## Local health check
 
@@ -22,3 +22,12 @@ python -m workers.health
 ```bash
 python -m workers.daily_pipeline.main --dry-run
 ```
+
+## Generate podcast audio manually
+
+```bash
+python -m workers.daily_pipeline.generate_podcast_audio <podcast-id>
+```
+
+This uses `OPENAI_API_KEY`, uploads MP3 output to the public
+`podcast-audio` Supabase Storage bucket, and updates the podcast row.

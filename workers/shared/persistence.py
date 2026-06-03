@@ -487,6 +487,44 @@ class PipelineRepository:
         )
         return rows[0]["id"]
 
+    def get_podcast(self, podcast_id: str) -> dict | None:
+        rows = self.client.get(
+            "podcasts",
+            {
+                "select": "id,podcast_type,daily_briefing_id,weekly_briefing_id,title,status,script,transcript,audio_storage_path,audio_url,duration_seconds,voice_name,tts_provider,generated_at",
+                "id": f"eq.{podcast_id}",
+                "limit": "1",
+            },
+        )
+        return rows[0] if rows else None
+
+    def update_podcast_audio(
+        self,
+        podcast_id: str,
+        *,
+        audio_storage_path: str,
+        audio_url: str,
+        voice_name: str,
+        tts_provider: str,
+        duration_seconds: int | None = None,
+    ) -> None:
+        payload = {
+            "status": "audio_ready",
+            "audio_storage_path": audio_storage_path,
+            "audio_url": audio_url,
+            "voice_name": voice_name,
+            "tts_provider": tts_provider,
+            "updated_at": datetime.now(UTC).isoformat(),
+        }
+        if duration_seconds:
+            payload["duration_seconds"] = duration_seconds
+
+        self.client.patch(
+            "podcasts",
+            {"id": f"eq.{podcast_id}"},
+            payload,
+        )
+
     def _summaries_by_article(self, article_ids: list[str]) -> dict[str, dict]:
         if not article_ids:
             return {}

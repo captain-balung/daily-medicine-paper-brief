@@ -43,7 +43,11 @@ export type DailyPodcast = {
   status: string;
   script: string | null;
   transcript: string | null;
+  audio_url: string | null;
+  audio_storage_path: string | null;
   duration_seconds: number | null;
+  voice_name: string | null;
+  tts_provider: string | null;
   generated_at: string | null;
 };
 
@@ -173,10 +177,12 @@ async function getDailyPodcast(briefingId: string): Promise<DailyPodcast | null>
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("podcasts")
-    .select("id, title, status, script, transcript, duration_seconds, generated_at")
+    .select(
+      "id, title, status, script, transcript, audio_url, audio_storage_path, duration_seconds, voice_name, tts_provider, generated_at",
+    )
     .eq("podcast_type", "daily")
     .eq("daily_briefing_id", briefingId)
-    .in("status", ["script_ready", "published"])
+    .in("status", ["script_ready", "audio_ready", "published"])
     .order("generated_at", { ascending: false })
     .limit(1)
     .maybeSingle<DailyPodcast>();

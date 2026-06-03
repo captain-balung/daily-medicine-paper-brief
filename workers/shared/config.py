@@ -12,6 +12,11 @@ class Settings:
     ncbi_api_key: str | None
     unpaywall_email: str | None
     crossref_mailto: str | None
+    openai_api_key: str | None
+    tts_provider: str
+    tts_model: str
+    tts_voice: str
+    podcast_audio_bucket: str
     database_url: str | None
     publication_mode: str
     mvp_sources: tuple[str, ...]
@@ -48,6 +53,11 @@ def load_settings() -> Settings:
         ncbi_api_key=os.getenv("NCBI_API_KEY"),
         unpaywall_email=os.getenv("UNPAYWALL_EMAIL"),
         crossref_mailto=os.getenv("CROSSREF_MAILTO"),
+        openai_api_key=os.getenv("OPENAI_API_KEY"),
+        tts_provider=os.getenv("TTS_PROVIDER", "openai"),
+        tts_model=os.getenv("TTS_MODEL", "gpt-4o-mini-tts"),
+        tts_voice=os.getenv("TTS_VOICE", "alloy"),
+        podcast_audio_bucket=os.getenv("PODCAST_AUDIO_BUCKET", "podcast-audio"),
         database_url=os.getenv("DATABASE_URL"),
         publication_mode=os.getenv("PUBLICATION_MODE", "auto_publish"),
         mvp_sources=_split_csv(os.getenv("MVP_SOURCES")),

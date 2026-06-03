@@ -66,6 +66,29 @@ class SupabaseRestClient:
         )
         return self._send(request)
 
+    def upload_storage_object(
+        self,
+        bucket: str,
+        object_path: str,
+        data: bytes,
+        content_type: str,
+        upsert: bool = True,
+    ) -> str:
+        url = f"{self.base_url}/storage/v1/object/{bucket}/{object_path}"
+        headers = self._headers()
+        headers["Content-Type"] = content_type
+        headers["Cache-Control"] = "3600"
+        if upsert:
+            headers["x-upsert"] = "true"
+        request = Request(
+            url,
+            data=data,
+            headers=headers,
+            method="POST",
+        )
+        self._send(request)
+        return f"{self.base_url}/storage/v1/object/public/{bucket}/{object_path}"
+
     def _headers(self) -> dict[str, str]:
         return {
             "apikey": self.secret_key,

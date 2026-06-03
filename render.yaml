@@ -19,6 +19,14 @@ services:
         value: https://fkucugazszaugtfvbvzr.supabase.co
       - key: ANTHROPIC_MODEL
         value: claude-haiku-4-5-20251001
+      - key: TTS_PROVIDER
+        value: openai
+      - key: TTS_MODEL
+        value: gpt-4o-mini-tts
+      - key: TTS_VOICE
+        value: alloy
+      - key: PODCAST_AUDIO_BUCKET
+        value: podcast-audio
       - key: UNPAYWALL_EMAIL
         value: captain.balung@gmail.com
       - key: CROSSREF_MAILTO
@@ -26,4 +34,6 @@ services:
       - key: SUPABASE_SECRET_KEY
         sync: false
       - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
         sync: false

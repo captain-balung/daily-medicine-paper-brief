@@ -7,7 +7,7 @@ Medical research intelligence MVP for daily Chinese briefings.
 - Core sources: PubMed, Crossref, Unpaywall
 - AI provider: Anthropic
 - Publication mode: auto-publish after setup and safety checks pass
-- Podcast scripts are generated; audio and TTS are intentionally out of scope for now
+- Podcast scripts are generated; trial OpenAI TTS audio can be generated manually
 - No manual review flow in the first version
 
 ## Project layout
@@ -46,9 +46,14 @@ Worker:
 SUPABASE_URL=
 SUPABASE_SECRET_KEY=
 ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
 NCBI_API_KEY=
 UNPAYWALL_EMAIL=
 CROSSREF_MAILTO=
+TTS_PROVIDER=openai
+TTS_MODEL=gpt-4o-mini-tts
+TTS_VOICE=alloy
+PODCAST_AUDIO_BUCKET=podcast-audio
 ```
 
 ## Local worker commands
@@ -60,4 +65,5 @@ python -m workers.daily_pipeline.main
 python -m workers.ai_analysis.run --limit 10
 python -m workers.daily_pipeline.generate_briefing --limit 10
 python -m workers.daily_pipeline.full_run --ai-limit 10
+python -m workers.daily_pipeline.generate_podcast_audio <podcast-id>
 ```

@@ -1,4 +1,5 @@
 import { ArticleCard } from "@/components/article-card";
+import { PodcastPanel } from "@/components/podcast-panel";
 import { getLatestDailyBriefing } from "@/lib/daily-briefings";
 
 export const dynamic = "force-dynamic";
@@ -47,18 +48,7 @@ export default async function HomePage() {
         ) : null}
 
         {briefing.podcast?.script ? (
-          <article className="panel wide podcast-script">
-            <div className="card-kicker">
-              <span className="badge">Podcast 稿</span>
-              {briefing.podcast.duration_seconds ? (
-                <span className="badge">
-                  約 {Math.max(1, Math.round(briefing.podcast.duration_seconds / 60))} 分鐘
-                </span>
-              ) : null}
-            </div>
-            <h2>{briefing.podcast.title}</h2>
-            <pre>{briefing.podcast.script}</pre>
-          </article>
+          <PodcastPanel podcast={briefing.podcast} />
         ) : null}
       </section>
     </main>
