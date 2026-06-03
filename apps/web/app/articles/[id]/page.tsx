@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getArticleDetail } from "@/lib/articles";
+import { accessStatusLabel } from "@/lib/labels";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function ArticlePage({
       <div className="detail-header">
         <div className="card-kicker">
           <span className="badge">{article.article_type ?? "Article"}</span>
-          <span className="badge">{article.access_status}</span>
+          <span className="badge">{accessStatusLabel(article.access_status)}</span>
           {article.score ? (
             <span className="badge">Score {article.score.total_score}</span>
           ) : null}

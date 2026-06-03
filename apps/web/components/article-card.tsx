@@ -1,4 +1,5 @@
 import type { DailyBriefingItem } from "@/lib/daily-briefings";
+import { accessStatusLabel } from "@/lib/labels";
 import Link from "next/link";
 
 export function ArticleCard({ item }: { item: DailyBriefingItem }) {
@@ -11,7 +12,7 @@ export function ArticleCard({ item }: { item: DailyBriefingItem }) {
     <article className="panel article-card">
       <div className="card-kicker">
         <span className="badge">{article.article_type ?? "Article"}</span>
-        <span className="badge">{article.access_status}</span>
+        <span className="badge">{accessStatusLabel(article.access_status)}</span>
         {article.score ? (
           <span className="badge">Score {article.score.total_score}</span>
         ) : null}

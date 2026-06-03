@@ -265,13 +265,17 @@ class PipelineRepository:
         )
 
     def list_top_analyzed_articles(self, limit: int = 10) -> list[dict]:
+        candidate_limit = max(limit * 5, 50)
         score_rows = self.client.get(
             "article_scores",
             {
                 "select": "article_id,total_score,recommendation_level,scoring_rationale",
                 "order": "total_score.desc",
-                "limit": str(limit),
+                "limit": str(candidate_limit),
             },
+        )
+        topic_slugs_by_article = self._article_topic_slugs(
+            [score["article_id"] for score in score_rows]
         )
 
         bundles = []
@@ -299,10 +303,34 @@ class PipelineRepository:
                         "article": article_rows[0],
                         "summary": summary_rows[0],
                         "score": score,
+                        "ranking_score": score["total_score"]
+                        + _topic_boost(topic_slugs_by_article.get(score["article_id"], [])),
                     }
                 )
 
-        return bundles
+        return sorted(bundles, key=lambda item: item["ranking_score"], reverse=True)[:limit]
+
+    def _article_topic_slugs(self, article_ids: list[str]) -> dict[str, list[str]]:
+        if not article_ids:
+            return {}
+
+        rows = self.client.get(
+            "article_topics",
+            {
+                "select": "article_id,topics(slug)",
+                "article_id": f"in.({','.join(article_ids)})",
+            },
+        )
+        slugs_by_article: dict[str, list[str]] = {}
+        for row in rows:
+            topic = row.get("topics")
+            if isinstance(topic, list):
+                topic = topic[0] if topic else None
+            slug = topic.get("slug") if isinstance(topic, dict) else None
+            if slug:
+                slugs_by_article.setdefault(row["article_id"], []).append(slug)
+
+        return slugs_by_article
 
     def save_daily_briefing(
         self,
@@ -418,6 +446,20 @@ def _recommendation_level(total_score: int) -> str:
     if total_score >= 10:
         return "background"
     return "low_priority"
+
+
+def _topic_boost(topic_slugs: list[str]) -> int:
+    boosts = {
+        "nephrology": 5,
+        "dialysis": 5,
+        "ckd": 5,
+        "cardiovascular": 2,
+        "metabolism": 2,
+        "ai_medicine": 2,
+        "internal_medicine": 1,
+        "basic_translational": 1,
+    }
+    return min(8, sum(boosts.get(slug, 0) for slug in set(topic_slugs)))
 
 
 def _first_non_empty(values: list[str | None]) -> str | None:
