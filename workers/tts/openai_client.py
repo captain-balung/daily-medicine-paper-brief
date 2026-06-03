@@ -1,6 +1,7 @@
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 import json
+import time
 
 from workers.shared.config import Settings
 
@@ -17,10 +18,20 @@ class OpenAITTSClient:
         self.voice = settings.tts_voice
 
     def create_mp3(self, text: str) -> bytes:
+        chunks = _chunk_text(_normalize_script_for_speech(text))
+        audio_parts = []
+        for index, chunk in enumerate(chunks):
+            if index:
+                time.sleep(0.5)
+            audio_parts.append(self._create_mp3_chunk(chunk))
+
+        return b"".join(audio_parts)
+
+    def _create_mp3_chunk(self, text: str) -> bytes:
         payload = {
             "model": self.model,
             "voice": self.voice,
-            "input": _normalize_script_for_speech(text),
+            "input": text,
             "response_format": "mp3",
         }
         request = Request(
@@ -53,3 +64,48 @@ def _normalize_script_for_speech(script: str) -> str:
         lines.append(line)
 
     return "\n\n".join(lines)
+
+
+def _chunk_text(text: str, max_chars: int = 900) -> list[str]:
+    paragraphs = [paragraph.strip() for paragraph in text.split("\n\n") if paragraph.strip()]
+    chunks = []
+    current = ""
+
+    for paragraph in paragraphs:
+        if len(paragraph) > max_chars:
+            if current:
+                chunks.append(current)
+                current = ""
+            chunks.extend(_split_long_paragraph(paragraph, max_chars=max_chars))
+            continue
+
+        candidate = f"{current}\n\n{paragraph}".strip() if current else paragraph
+        if len(candidate) > max_chars:
+            if current:
+                chunks.append(current)
+            current = paragraph
+        else:
+            current = candidate
+
+    if current:
+        chunks.append(current)
+
+    return chunks
+
+
+def _split_long_paragraph(paragraph: str, max_chars: int) -> list[str]:
+    pieces = []
+    current = ""
+    for sentence in paragraph.replace("。", "。\n").replace("；", "；\n").splitlines():
+        sentence = sentence.strip()
+        if not sentence:
+            continue
+        candidate = current + sentence
+        if len(candidate) > max_chars and current:
+            pieces.append(current)
+            current = sentence
+        else:
+            current = candidate
+    if current:
+        pieces.append(current)
+    return pieces
