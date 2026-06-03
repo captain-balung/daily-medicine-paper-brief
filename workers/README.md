@@ -8,7 +8,8 @@ First-version scope:
 - Core sources: PubMed, Crossref, Unpaywall
 - Anthropic for AI analysis
 - Auto-publish after readiness and safety checks pass
-- No podcast, audio, or TTS
+- Daily podcast script generation
+- No audio or TTS yet
 
 ## Local health check
 

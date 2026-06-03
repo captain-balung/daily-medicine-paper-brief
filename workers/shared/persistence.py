@@ -411,6 +411,109 @@ class PipelineRepository:
 
         return briefing_id
 
+    def get_daily_briefing_bundle(self, briefing_id: str) -> dict | None:
+        briefing_rows = self.client.get(
+            "daily_briefings",
+            {
+                "select": "id,briefing_date,title,summary,trend_overview,clinical_basic_section,interesting_medicine_section,source_window_start,source_window_end",
+                "id": f"eq.{briefing_id}",
+                "limit": "1",
+            },
+        )
+        if not briefing_rows:
+            return None
+
+        item_rows = self.client.get(
+            "daily_briefing_items",
+            {
+                "select": "section,rank,item_summary,articles(id,title,title_zh,journal,doi,pmid,access_status,article_type)",
+                "daily_briefing_id": f"eq.{briefing_id}",
+                "order": "section.asc,rank.asc",
+            },
+        )
+        article_ids = []
+        normalized_items = []
+        for row in item_rows:
+            article = row.get("articles")
+            if isinstance(article, list):
+                article = article[0] if article else None
+            if article:
+                article_ids.append(article["id"])
+            normalized_items.append({**row, "article": article})
+
+        summaries = self._summaries_by_article(article_ids)
+        scores = self._scores_by_article(article_ids)
+
+        return {
+            "briefing": briefing_rows[0],
+            "items": [
+                {
+                    **item,
+                    "summary": summaries.get(item["article"]["id"], {})
+                    if item.get("article")
+                    else {},
+                    "score": scores.get(item["article"]["id"], {})
+                    if item.get("article")
+                    else {},
+                }
+                for item in normalized_items
+            ],
+        }
+
+    def save_daily_podcast_script(
+        self,
+        *,
+        briefing_id: str,
+        title: str,
+        script: str,
+        voice_name: str | None = None,
+    ) -> str:
+        rows = self.client.upsert(
+            "podcasts",
+            {
+                "podcast_type": "daily",
+                "daily_briefing_id": briefing_id,
+                "title": title,
+                "status": "script_ready",
+                "script": script,
+                "transcript": script,
+                "duration_seconds": _estimated_duration_seconds(script),
+                "voice_name": voice_name,
+                "tts_provider": None,
+                "is_ai_generated": True,
+                "generated_at": datetime.now(UTC).isoformat(),
+            },
+            on_conflict="podcast_type,daily_briefing_id",
+        )
+        return rows[0]["id"]
+
+    def _summaries_by_article(self, article_ids: list[str]) -> dict[str, dict]:
+        if not article_ids:
+            return {}
+
+        rows = self.client.get(
+            "article_summaries",
+            {
+                "select": "article_id,one_sentence_summary,clinical_implications,clinical_basic_translation,limitations,taiwan_relevance,teaching_use,research_use",
+                "article_id": f"in.({','.join(article_ids)})",
+                "summary_version": "eq.1",
+            },
+        )
+        return {row["article_id"]: row for row in rows}
+
+    def _scores_by_article(self, article_ids: list[str]) -> dict[str, dict]:
+        if not article_ids:
+            return {}
+
+        rows = self.client.get(
+            "article_scores",
+            {
+                "select": "article_id,total_score,recommendation_level,scoring_rationale,podcast_suitability",
+                "article_id": f"in.({','.join(article_ids)})",
+            },
+        )
+        return {row["article_id"]: row for row in rows}
+
     def _source_id(self, name: str) -> str:
         if name in self._source_ids:
             return self._source_ids[name]
@@ -460,6 +563,12 @@ def _topic_boost(topic_slugs: list[str]) -> int:
         "basic_translational": 1,
     }
     return min(8, sum(boosts.get(slug, 0) for slug in set(topic_slugs)))
+
+
+def _estimated_duration_seconds(script: str) -> int:
+    # Mandarin narration is usually around 250-330 CJK characters per minute.
+    compact_length = len("".join(script.split()))
+    return max(60, round(compact_length / 280 * 60))
 
 
 def _first_non_empty(values: list[str | None]) -> str | None:

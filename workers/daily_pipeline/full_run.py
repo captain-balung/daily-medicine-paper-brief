@@ -2,6 +2,7 @@ import argparse
 
 from workers.ai_analysis.run import run_ai_analysis
 from workers.daily_pipeline.generate_briefing import generate_daily_briefing
+from workers.daily_pipeline.generate_podcast_script import generate_daily_podcast_script
 from workers.daily_pipeline.main import run_daily_pipeline
 from workers.shared.config import load_settings
 from workers.shared.persistence import PipelineRepository
@@ -47,6 +48,16 @@ def run_full_daily_pipeline(ai_limit: int, dry_run: bool = False) -> int:
             event_type="info",
             step_name="daily_briefing",
             message=f"Generated daily briefing {briefing_id}.",
+        )
+
+    podcast_id = generate_daily_podcast_script(briefing_id)
+    print(f"daily_podcast_script={podcast_id}")
+    if job_id:
+        repository.log_event(
+            job_id,
+            event_type="info",
+            step_name="daily_podcast_script",
+            message=f"Generated daily podcast script {podcast_id}.",
         )
     return 0 if ai_result["failed"] == 0 else 1
 

@@ -35,6 +35,10 @@ Render Cron Jobs do not support the free instance type. The Blueprint omits
 python -m workers.daily_pipeline.full_run --ai-limit 10
 ```
 
+The full run collects/enriches articles, analyzes up to `DAILY_AI_LIMIT` new
+articles, generates the daily briefing, and generates a daily podcast script.
+It does not generate audio or call a TTS provider.
+
 ## Required Render Secrets
 
 Render will prompt for these during initial Blueprint creation:

@@ -214,6 +214,21 @@ a {
   font-size: 13px;
 }
 
+.podcast-script {
+  display: grid;
+  gap: 12px;
+}
+
+.podcast-script pre {
+  overflow-x: auto;
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--foreground);
+  font-family: Arial, "Noto Sans TC", sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
 @media (max-width: 760px) {
   .topbar-inner {
     align-items: flex-start;

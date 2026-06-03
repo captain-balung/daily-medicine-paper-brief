@@ -54,6 +54,42 @@ class AnthropicClient:
         )
         return _parse_json_text(text)
 
+    def create_text(self, system: str, user: str, max_tokens: int = 3200) -> str:
+        payload = {
+            "model": self.model,
+            "max_tokens": max_tokens,
+            "temperature": 0.35,
+            "system": system,
+            "messages": [{"role": "user", "content": user}],
+        }
+        request = Request(
+            self.base_url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "x-api-key": self.api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            method="POST",
+        )
+
+        try:
+            with urlopen(request, timeout=90) as response:
+                message = json.loads(response.read().decode("utf-8"))
+        except HTTPError as exc:
+            body = exc.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"Anthropic API error {exc.code}: {body}") from exc
+
+        text = "\n".join(
+            block.get("text", "")
+            for block in message.get("content", [])
+            if block.get("type") == "text"
+        ).strip()
+        if not text:
+            raise RuntimeError("Anthropic response did not contain text.")
+
+        return text
+
 
 def _parse_json_text(text: str) -> dict:
     stripped = text.strip()

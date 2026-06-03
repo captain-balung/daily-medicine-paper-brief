@@ -52,6 +52,21 @@ export default async function DailyBriefingPage({
           </article>
         ) : null}
 
+        {briefing.podcast?.script ? (
+          <article className="panel wide podcast-script">
+            <div className="card-kicker">
+              <span className="badge">Podcast 稿</span>
+              {briefing.podcast.duration_seconds ? (
+                <span className="badge">
+                  約 {Math.max(1, Math.round(briefing.podcast.duration_seconds / 60))} 分鐘
+                </span>
+              ) : null}
+            </div>
+            <h2>{briefing.podcast.title}</h2>
+            <pre>{briefing.podcast.script}</pre>
+          </article>
+        ) : null}
+
         <article className="panel wide">
           <h2>聲明</h2>
           <p>

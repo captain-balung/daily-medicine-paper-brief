@@ -34,6 +34,17 @@ export type DailyBriefing = {
   source_window_start: string;
   source_window_end: string;
   items: DailyBriefingItem[];
+  podcast: DailyPodcast | null;
+};
+
+export type DailyPodcast = {
+  id: string;
+  title: string;
+  status: string;
+  script: string | null;
+  transcript: string | null;
+  duration_seconds: number | null;
+  generated_at: string | null;
 };
 
 type DailyBriefingRow = {
@@ -139,6 +150,7 @@ async function hydrateDailyBriefing(
   const scores = await getScores(
     normalizedRows.flatMap((item) => item.article?.id ?? []),
   );
+  const podcast = await getDailyPodcast(briefing.id);
 
   return {
     ...briefing,
@@ -153,7 +165,27 @@ async function hydrateDailyBriefing(
           }
         : null,
     })),
+    podcast,
   };
+}
+
+async function getDailyPodcast(briefingId: string): Promise<DailyPodcast | null> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("podcasts")
+    .select("id, title, status, script, transcript, duration_seconds, generated_at")
+    .eq("podcast_type", "daily")
+    .eq("daily_briefing_id", briefingId)
+    .in("status", ["script_ready", "published"])
+    .order("generated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle<DailyPodcast>();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? null;
 }
 
 async function getScores(articleIds: string[]) {

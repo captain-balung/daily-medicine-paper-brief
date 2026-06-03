@@ -7,7 +7,7 @@ Medical research intelligence MVP for daily Chinese briefings.
 - Core sources: PubMed, Crossref, Unpaywall
 - AI provider: Anthropic
 - Publication mode: auto-publish after setup and safety checks pass
-- Audio, podcast, and TTS are intentionally out of scope for the first version
+- Podcast scripts are generated; audio and TTS are intentionally out of scope for now
 - No manual review flow in the first version
 
 ## Project layout
