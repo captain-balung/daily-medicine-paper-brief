@@ -24,6 +24,11 @@ supabase/       SQL migrations and seed data
 The web app can be deployed to Vercel from this repository. See
 `docs/deployment_vercel.md`.
 
+## Worker deployment
+
+The daily cloud pipeline can be deployed as a Render Cron Job from `render.yaml`.
+See `docs/render_cron.md`.
+
 ## Environment
 
 Copy `.env.example` into local environment files as needed. Do not commit `.env`.

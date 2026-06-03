@@ -1,0 +1,29 @@
+services:
+  - type: cron
+    name: daily-medicine-paper-brief-daily-pipeline
+    runtime: python
+    region: singapore
+    schedule: "30 22 * * *"
+    buildCommand: "true"
+    startCommand: "python -m workers.render_daily"
+    envVars:
+      - key: TZ
+        value: Asia/Taipei
+      - key: PUBLICATION_MODE
+        value: auto_publish
+      - key: MVP_SOURCES
+        value: pubmed,crossref,unpaywall
+      - key: DAILY_AI_LIMIT
+        value: "10"
+      - key: SUPABASE_URL
+        value: https://fkucugazszaugtfvbvzr.supabase.co
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5-20251001
+      - key: UNPAYWALL_EMAIL
+        value: captain.balung@gmail.com
+      - key: CROSSREF_MAILTO
+        value: captain.balung@gmail.com
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
