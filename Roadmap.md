@@ -43,6 +43,8 @@ Production:
 - Top Ranking includes topic weighting for nephrology, CKD, dialysis, cardiovascular, metabolism, AI medicine, internal medicine, and basic-translational topics.
 - Article cards show ranking rationale, score signals, recommendation level, and access-status explanation.
 - `/admin/status` shows recent pipeline jobs, pipeline events, latest briefing status, podcast script status, and podcast audio status.
+- Homepage and daily briefing pages show a `Today's Top Ranking` summary table.
+- `/articles` supports filtering by access status, article type, minimum score, and sorting by score, clinical impact, or publication date.
 
 ### Podcast
 
@@ -66,8 +68,8 @@ Production:
 1. Review the first automated podcast audio run from Render Cron.
 2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
 3. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
-4. Improve article list filtering and sorting for physician review.
-5. Review ranking rationale wording with physician feedback.
+4. Review ranking rationale wording with physician feedback.
+5. Refine article detail pages into a more journal-club-like format.
 
 ## Operating Notes
 

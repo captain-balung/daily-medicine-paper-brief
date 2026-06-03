@@ -1,5 +1,6 @@
 import { ArticleCard } from "@/components/article-card";
 import { PodcastPanel } from "@/components/podcast-panel";
+import { RankingSummary } from "@/components/ranking-summary";
 import { getLatestDailyBriefing } from "@/lib/daily-briefings";
 
 export const dynamic = "force-dynamic";
@@ -33,6 +34,8 @@ export default async function HomePage() {
           </p>
           <span className="badge">Published</span>
         </article>
+
+        <RankingSummary items={mustRead} />
 
         {mustRead.map((item) => (
           <ArticleCard

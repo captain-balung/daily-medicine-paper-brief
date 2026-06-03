@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/article-card";
 import { PodcastPanel } from "@/components/podcast-panel";
+import { RankingSummary } from "@/components/ranking-summary";
 import { getDailyBriefingByDate } from "@/lib/daily-briefings";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +33,8 @@ export default async function DailyBriefingPage({
             {new Date(briefing.source_window_end).toLocaleString("zh-TW")}
           </p>
         </article>
+
+        <RankingSummary items={mustRead} />
 
         {mustRead.map((item) => (
           <ArticleCard
