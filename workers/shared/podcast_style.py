@@ -7,7 +7,7 @@ FIXED_DAILY_PODCAST_OPENING = (
 )
 
 FAST_OPENING_SPEED = 1.5
-NORMAL_PODCAST_SPEED = 0.95
+NORMAL_PODCAST_SPEED = 1.05
 
 FAST_OPENING_TTS_INSTRUCTIONS = (
     "Speak this opening like a playful, fast-paced recurring podcast gag. "
