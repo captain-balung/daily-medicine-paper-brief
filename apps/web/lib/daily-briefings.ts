@@ -53,6 +53,9 @@ export type DailyPodcast = {
   transcript: string | null;
   audio_url: string | null;
   audio_storage_path: string | null;
+  video_url: string | null;
+  video_storage_path: string | null;
+  video_generated_at: string | null;
   duration_seconds: number | null;
   voice_name: string | null;
   tts_provider: string | null;
@@ -206,7 +209,7 @@ async function getDailyPodcast(briefingId: string): Promise<DailyPodcast | null>
   const { data, error } = await supabase
     .from("podcasts")
     .select(
-      "id, title, status, script, transcript, audio_url, audio_storage_path, duration_seconds, voice_name, tts_provider, generated_at",
+      "id, title, status, script, transcript, audio_url, audio_storage_path, video_url, video_storage_path, video_generated_at, duration_seconds, voice_name, tts_provider, generated_at",
     )
     .eq("podcast_type", "daily")
     .eq("daily_briefing_id", briefingId)

@@ -17,6 +17,8 @@ class Settings:
     tts_model: str
     tts_voice: str
     podcast_audio_bucket: str
+    podcast_video_bucket: str
+    video_font_path: str | None
     database_url: str | None
     publication_mode: str
     mvp_sources: tuple[str, ...]
@@ -58,6 +60,8 @@ def load_settings() -> Settings:
         tts_model=os.getenv("TTS_MODEL", "gpt-4o-mini-tts"),
         tts_voice=os.getenv("TTS_VOICE", "marin"),
         podcast_audio_bucket=os.getenv("PODCAST_AUDIO_BUCKET", "podcast-audio"),
+        podcast_video_bucket=os.getenv("PODCAST_VIDEO_BUCKET", "podcast-videos"),
+        video_font_path=os.getenv("VIDEO_FONT_PATH"),
         database_url=os.getenv("DATABASE_URL"),
         publication_mode=os.getenv("PUBLICATION_MODE", "auto_publish"),
         mvp_sources=_split_csv(os.getenv("MVP_SOURCES")),

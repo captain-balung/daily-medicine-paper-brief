@@ -4,6 +4,7 @@ from workers.ai_analysis.run import run_ai_analysis
 from workers.daily_pipeline.generate_briefing import generate_daily_briefing
 from workers.daily_pipeline.generate_podcast_audio import generate_podcast_audio
 from workers.daily_pipeline.generate_podcast_script import generate_daily_podcast_script
+from workers.daily_pipeline.generate_podcast_video import generate_podcast_video
 from workers.daily_pipeline.main import run_daily_pipeline
 from workers.shared.config import load_settings
 from workers.shared.persistence import PipelineRepository
@@ -75,6 +76,15 @@ def run_full_daily_pipeline(ai_limit: int, dry_run: bool = False) -> int:
                 event_type="info",
                 step_name="daily_podcast_audio",
                 message=f"Generated daily podcast audio for script {podcast_id}.",
+            )
+        video_url = generate_podcast_video(podcast_id)
+        print(f"daily_podcast_video={video_url}")
+        if job_id:
+            repository.log_event(
+                job_id,
+                event_type="info",
+                step_name="daily_podcast_video",
+                message=f"Generated daily podcast video for script {podcast_id}.",
             )
     else:
         print("daily_podcast_audio=skipped:missing_openai_api_key")

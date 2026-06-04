@@ -513,7 +513,7 @@ class PipelineRepository:
         rows = self.client.get(
             "podcasts",
             {
-                "select": "id,podcast_type,daily_briefing_id,weekly_briefing_id,title,status,script,transcript,audio_storage_path,audio_url,duration_seconds,voice_name,tts_provider,generated_at",
+                "select": "id,podcast_type,daily_briefing_id,weekly_briefing_id,title,status,script,transcript,audio_storage_path,audio_url,video_storage_path,video_url,video_generated_at,duration_seconds,voice_name,tts_provider,generated_at",
                 "id": f"eq.{podcast_id}",
                 "limit": "1",
             },
@@ -545,6 +545,24 @@ class PipelineRepository:
             "podcasts",
             {"id": f"eq.{podcast_id}"},
             payload,
+        )
+
+    def update_podcast_video(
+        self,
+        podcast_id: str,
+        *,
+        video_storage_path: str,
+        video_url: str,
+    ) -> None:
+        self.client.patch(
+            "podcasts",
+            {"id": f"eq.{podcast_id}"},
+            {
+                "video_storage_path": video_storage_path,
+                "video_url": video_url,
+                "video_generated_at": datetime.now(UTC).isoformat(),
+                "updated_at": datetime.now(UTC).isoformat(),
+            },
         )
 
     def _summaries_by_article(self, article_ids: list[str]) -> dict[str, dict]:

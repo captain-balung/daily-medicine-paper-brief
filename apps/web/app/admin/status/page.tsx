@@ -11,7 +11,7 @@ export default async function SystemStatusPage() {
       <h1 className="page-title">System status</h1>
       <p className="lede">
         Check whether the daily pipeline collected papers, analyzed articles,
-        published the briefing, and generated podcast audio.
+        published the briefing, and generated podcast audio and video.
       </p>
 
       {!status.configured ? (
@@ -55,7 +55,18 @@ export default async function SystemStatusPage() {
                   label="Podcast audio"
                   value={status.today.hasPodcastAudio ? "Ready" : "Missing"}
                 />
+                <StatusRow
+                  label="Podcast video"
+                  value={status.today.hasPodcastVideo ? "Ready" : "Missing"}
+                />
               </ul>
+              {status.today.videoUrl ? (
+                <p>
+                  <a className="text-link" href={status.today.videoUrl} target="_blank">
+                    Open latest video
+                  </a>
+                </p>
+              ) : null}
               {status.today.audioUrl ? (
                 <p>
                   <a className="text-link" href={status.today.audioUrl} target="_blank">

@@ -333,11 +333,25 @@ a {
   gap: 8px;
 }
 
+.video-block {
+  display: grid;
+  gap: 8px;
+}
+
+.video-block video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #000;
+}
+
 .audio-block audio {
   width: 100%;
 }
 
-.audio-block p {
+.audio-block p,
+.video-block p {
   margin: 0;
   color: var(--muted);
   font-size: 13px;

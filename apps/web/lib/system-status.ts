@@ -28,7 +28,9 @@ export type TodayPublicationStatus = {
   briefingStatus: string | null;
   hasPodcastScript: boolean;
   hasPodcastAudio: boolean;
+  hasPodcastVideo: boolean;
   audioUrl: string | null;
+  videoUrl: string | null;
 };
 
 export type SystemStatus = {
@@ -49,6 +51,7 @@ type DailyBriefingRow = {
 type PodcastRow = {
   script: string | null;
   audio_url: string | null;
+  video_url: string | null;
 };
 
 export async function getSystemStatus(): Promise<SystemStatus> {
@@ -132,7 +135,7 @@ async function getTodayPublicationStatus(
 
   const { data: podcast, error: podcastError } = await supabase
     .from("podcasts")
-    .select("script, audio_url")
+    .select("script, audio_url, video_url")
     .eq("daily_briefing_id", briefing.id)
     .order("generated_at", { ascending: false })
     .limit(1)
@@ -147,6 +150,8 @@ async function getTodayPublicationStatus(
     briefingStatus: briefing.status,
     hasPodcastScript: Boolean(podcast?.script),
     hasPodcastAudio: Boolean(podcast?.audio_url),
+    hasPodcastVideo: Boolean(podcast?.video_url),
     audioUrl: podcast?.audio_url ?? null,
+    videoUrl: podcast?.video_url ?? null,
   };
 }

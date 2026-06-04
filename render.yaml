@@ -4,7 +4,7 @@ services:
     runtime: python
     region: singapore
     schedule: "30 22 * * *"
-    buildCommand: "true"
+    buildCommand: "pip install -r workers/requirements.txt"
     startCommand: "python -m workers.render_daily"
     envVars:
       - key: TZ
@@ -27,6 +27,8 @@ services:
         value: alloy
       - key: PODCAST_AUDIO_BUCKET
         value: podcast-audio
+      - key: PODCAST_VIDEO_BUCKET
+        value: podcast-videos
       - key: UNPAYWALL_EMAIL
         value: captain.balung@gmail.com
       - key: CROSSREF_MAILTO
