@@ -7,4 +7,18 @@ FIXED_DAILY_PODCAST_OPENING = (
 )
 
 FAST_OPENING_SPEED = 1.85
-NORMAL_PODCAST_SPEED = 1.0
+NORMAL_PODCAST_SPEED = 0.95
+
+FAST_OPENING_TTS_INSTRUCTIONS = (
+    "Speak this opening like a playful, fast-paced recurring podcast gag. "
+    "Keep the energy high and slightly exaggerated, but still clear in Traditional Chinese. "
+    "Do not sound robotic."
+)
+
+NORMAL_PODCAST_TTS_INSTRUCTIONS = (
+    "Speak like a natural Taiwanese physician hosting a calm medical podcast. "
+    "Use a warm, steady, professional tone. "
+    "Do not sound like a newsreader or a formal audiobook. "
+    "Add subtle pauses between ideas, slow down slightly around English medical terms, "
+    "and keep the delivery conversational."
+)

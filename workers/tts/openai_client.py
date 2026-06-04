@@ -6,8 +6,10 @@ import time
 from workers.shared.config import Settings
 from workers.shared.podcast_style import (
     FAST_OPENING_SPEED,
+    FAST_OPENING_TTS_INSTRUCTIONS,
     FIXED_DAILY_PODCAST_OPENING,
     NORMAL_PODCAST_SPEED,
+    NORMAL_PODCAST_TTS_INSTRUCTIONS,
 )
 
 
@@ -26,17 +28,29 @@ class OpenAITTSClient:
         segments = _speech_segments(text)
         audio_parts = []
         is_first_chunk = True
-        for segment_text, speed in segments:
+        for segment_text, speed, instructions in segments:
             chunks = _chunk_text(segment_text)
             for chunk in chunks:
                 if not is_first_chunk:
                     time.sleep(0.5)
-                audio_parts.append(self._create_mp3_chunk(chunk, speed=speed))
+                audio_parts.append(
+                    self._create_mp3_chunk(
+                        chunk,
+                        speed=speed,
+                        instructions=instructions,
+                    )
+                )
                 is_first_chunk = False
 
         return b"".join(audio_parts)
 
-    def _create_mp3_chunk(self, text: str, *, speed: float) -> bytes:
+    def _create_mp3_chunk(
+        self,
+        text: str,
+        *,
+        speed: float,
+        instructions: str | None = None,
+    ) -> bytes:
         payload = {
             "model": self.model,
             "voice": self.voice,
@@ -44,6 +58,8 @@ class OpenAITTSClient:
             "response_format": "mp3",
             "speed": speed,
         }
+        if instructions and self.model.startswith("gpt-4o"):
+            payload["instructions"] = instructions
         request = Request(
             self.base_url,
             data=json.dumps(payload).encode("utf-8"),
@@ -76,18 +92,24 @@ def _normalize_script_for_speech(script: str) -> str:
     return "\n\n".join(lines)
 
 
-def _speech_segments(script: str) -> list[tuple[str, float]]:
+def _speech_segments(script: str) -> list[tuple[str, float, str]]:
     normalized = _normalize_script_for_speech(script)
     opening = FIXED_DAILY_PODCAST_OPENING.strip()
 
     if normalized.startswith(opening):
         rest = normalized[len(opening) :].strip()
-        segments = [(opening, FAST_OPENING_SPEED)]
+        segments = [(opening, FAST_OPENING_SPEED, FAST_OPENING_TTS_INSTRUCTIONS)]
         if rest:
-            segments.append((rest, NORMAL_PODCAST_SPEED))
+            segments.append(
+                (rest, NORMAL_PODCAST_SPEED, NORMAL_PODCAST_TTS_INSTRUCTIONS)
+            )
         return segments
 
-    return [(normalized, NORMAL_PODCAST_SPEED)] if normalized else []
+    return (
+        [(normalized, NORMAL_PODCAST_SPEED, NORMAL_PODCAST_TTS_INSTRUCTIONS)]
+        if normalized
+        else []
+    )
 
 
 def _chunk_text(text: str, max_chars: int = 900) -> list[str]:

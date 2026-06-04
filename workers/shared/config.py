@@ -56,7 +56,7 @@ def load_settings() -> Settings:
         openai_api_key=os.getenv("OPENAI_API_KEY"),
         tts_provider=os.getenv("TTS_PROVIDER", "openai"),
         tts_model=os.getenv("TTS_MODEL", "gpt-4o-mini-tts"),
-        tts_voice=os.getenv("TTS_VOICE", "alloy"),
+        tts_voice=os.getenv("TTS_VOICE", "marin"),
         podcast_audio_bucket=os.getenv("PODCAST_AUDIO_BUCKET", "podcast-audio"),
         database_url=os.getenv("DATABASE_URL"),
         publication_mode=os.getenv("PUBLICATION_MODE", "auto_publish"),
