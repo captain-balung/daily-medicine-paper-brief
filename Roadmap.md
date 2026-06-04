@@ -56,7 +56,7 @@ Production:
 - Daily podcast script generation is implemented.
 - Podcast scripts are stored in Supabase `podcasts`.
 - Daily podcast scripts target an approximately 7-minute morning commute format.
-- Daily podcast scripts use a fixed humorous host opening, rendered faster than the normal briefing body in TTS.
+- Daily podcast scripts use a fixed humorous host opening, rendered at 1.5x speed before the normal briefing body.
 - OpenAI TTS defaults to `marin`, uses segment-specific voice instructions, and reads the main briefing body at 0.95x speed.
 - Manual OpenAI TTS audio generation is implemented.
 - MP3 files are uploaded to Supabase Storage.
