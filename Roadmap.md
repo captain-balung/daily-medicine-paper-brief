@@ -55,6 +55,7 @@ Production:
 
 - Daily podcast script generation is implemented.
 - Podcast scripts are stored in Supabase `podcasts`.
+- Daily podcast scripts target an approximately 7-minute morning commute format.
 - Manual OpenAI TTS audio generation is implemented.
 - MP3 files are uploaded to Supabase Storage.
 - Homepage and daily pages display the podcast script and audio player when audio is available.
@@ -70,8 +71,8 @@ Production:
 
 ## Next Recommended Work
 
-1. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
-2. Adjust podcast prompt style if physician feedback asks for a different tone or depth.
+1. Listen to the next 7-minute podcast script/audio and confirm the shorter length feels right.
+2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
 3. Review ranking rationale wording with physician feedback.
 4. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
 5. Explore weekly briefing once daily review stabilizes.

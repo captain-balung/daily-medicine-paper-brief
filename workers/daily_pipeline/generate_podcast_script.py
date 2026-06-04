@@ -6,11 +6,15 @@ from workers.shared.persistence import PipelineRepository
 from workers.shared.supabase_rest import SupabaseRestClient
 
 
-SYSTEM_PROMPT = """You write professional Traditional Chinese medical podcast scripts.
+TARGET_PODCAST_MINUTES = 7
+TARGET_ARTICLE_COUNT = 3
+
+SYSTEM_PROMPT = f"""You write professional Traditional Chinese medical podcast scripts.
 Audience: nephrologists, internists, residents, researchers, and medical teachers in Taiwan.
 Use a clear spoken style. Retain essential English medical terms.
 Do not give direct treatment instructions. Do not imply full-text analysis.
 Be explicit that the content is AI-assisted and based on abstracts, metadata, and source links.
+Target a concise {TARGET_PODCAST_MINUTES}-minute morning commute briefing.
 Return only the script text, with section headings.
 """
 
@@ -31,7 +35,7 @@ def generate_daily_podcast_script(briefing_id: str) -> str:
     script = client.create_text(
         system=SYSTEM_PROMPT,
         user=_podcast_prompt(bundle),
-        max_tokens=3600,
+        max_tokens=2200,
     )
     podcast_id = repository.save_daily_podcast_script(
         briefing_id=briefing_id,
@@ -49,7 +53,7 @@ def _podcast_prompt(bundle: dict) -> str:
         items = bundle["items"]
 
     article_lines = []
-    for index, item in enumerate(items[:5], start=1):
+    for index, item in enumerate(items[:TARGET_ARTICLE_COUNT], start=1):
         article = item.get("article") or {}
         summary = item.get("summary") or {}
         score = item.get("score") or {}
@@ -57,7 +61,6 @@ def _podcast_prompt(bundle: dict) -> str:
             f"""Article {index}
 Chinese title: {article.get("title_zh") or article.get("title")}
 Original title: {article.get("title")}
-Journal: {article.get("journal")}
 Study type: {article.get("article_type")}
 Access status: {article.get("access_status")}
 Score: {score.get("total_score")}
@@ -71,19 +74,27 @@ Teaching/research use: {summary.get("teaching_use") or summary.get("research_use
 """
         )
 
-    return f"""Create an 8-12 minute daily medical podcast script from this briefing.
+    return f"""Create a concise approximately {TARGET_PODCAST_MINUTES}-minute daily medical podcast script from this briefing.
+
+Hard length rules:
+- Target about 1,100-1,400 Traditional Chinese characters total.
+- Cover only the top {TARGET_ARTICLE_COUNT} selected articles in detail.
+- Keep each article segment around 70-90 seconds.
+- Use short spoken sentences.
+- Do not read journal names, PMID, DOI, or long disclaimers aloud unless essential.
 
 Required structure:
-1. 開場：date, what this episode covers, one safety sentence.
-2. 今日快速重點：3-5 concise bullets written as spoken lines.
-3. 逐篇導讀：for each selected article, explain why it matters, what the evidence can and cannot support, and how it might inform clinical thinking, teaching, or research.
-4. 臨床與基礎轉譯：connect clinical findings with mechanism when possible.
-5. 今日 take-home messages：3 short points.
-6. 結尾聲明：AI-assisted, abstract/metadata/source-link based, not clinical decision advice.
+1. Opening, about 15 seconds: date, scope, and one brief source/safety sentence.
+2. Today's three themes, about 30 seconds: exactly three spoken bullets.
+3. Top three articles: for each article, answer what was asked, how it was studied, what was found, why it matters, and the key limitation.
+4. Short deep-dive bridge: one concise paragraph connecting clinical meaning or mechanism across the papers.
+5. Take-home messages, about 20 seconds: exactly three short points.
+6. Closing notice: one sentence only, saying this is AI-assisted literature briefing based on abstracts, metadata, and source links, not clinical decision advice.
 
 Style:
 - Conversational but professional.
 - Avoid hype.
+- Prefer compact paragraphs over long monologues.
 - Use paragraph breaks suitable for reading aloud.
 - Keep English medical terms where they improve precision.
 - Do not mention audio production or TTS.

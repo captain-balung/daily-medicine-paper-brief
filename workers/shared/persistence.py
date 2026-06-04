@@ -621,9 +621,9 @@ def _topic_boost(topic_slugs: list[str]) -> int:
 
 
 def _estimated_duration_seconds(script: str) -> int:
-    # Mandarin narration is usually around 250-330 CJK characters per minute.
+    # Mandarin medical narration is usually around 280-340 compact characters per minute.
     compact_length = len("".join(script.split()))
-    return max(60, round(compact_length / 280 * 60))
+    return max(60, round(compact_length / 310 * 60))
 
 
 def _first_non_empty(values: list[str | None]) -> str | None:
