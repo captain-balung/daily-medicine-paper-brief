@@ -2,6 +2,11 @@ from datetime import UTC, datetime
 
 from workers.shared.models import CandidateArticle, PipelineWindow
 from workers.shared.normalization import normalize_title
+from workers.shared.podcast_style import (
+    FAST_OPENING_SPEED,
+    FIXED_DAILY_PODCAST_OPENING,
+    NORMAL_PODCAST_SPEED,
+)
 from workers.shared.supabase_rest import SupabaseRestClient
 
 
@@ -622,8 +627,20 @@ def _topic_boost(topic_slugs: list[str]) -> int:
 
 def _estimated_duration_seconds(script: str) -> int:
     # Mandarin medical narration is usually around 280-340 compact characters per minute.
-    compact_length = len("".join(script.split()))
-    return max(60, round(compact_length / 310 * 60))
+    compact_script = "".join(script.split())
+    compact_opening = "".join(FIXED_DAILY_PODCAST_OPENING.split())
+    chars_per_minute = 310
+
+    if compact_script.startswith(compact_opening):
+        opening_seconds = len(compact_opening) / (
+            chars_per_minute * FAST_OPENING_SPEED
+        ) * 60
+        rest_seconds = (len(compact_script) - len(compact_opening)) / (
+            chars_per_minute * NORMAL_PODCAST_SPEED
+        ) * 60
+        return max(60, round(opening_seconds + rest_seconds))
+
+    return max(60, round(len(compact_script) / chars_per_minute * 60))
 
 
 def _first_non_empty(values: list[str | None]) -> str | None:

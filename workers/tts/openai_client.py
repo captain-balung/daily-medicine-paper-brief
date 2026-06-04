@@ -4,6 +4,11 @@ import json
 import time
 
 from workers.shared.config import Settings
+from workers.shared.podcast_style import (
+    FAST_OPENING_SPEED,
+    FIXED_DAILY_PODCAST_OPENING,
+    NORMAL_PODCAST_SPEED,
+)
 
 
 class OpenAITTSClient:
@@ -18,21 +23,26 @@ class OpenAITTSClient:
         self.voice = settings.tts_voice
 
     def create_mp3(self, text: str) -> bytes:
-        chunks = _chunk_text(_normalize_script_for_speech(text))
+        segments = _speech_segments(text)
         audio_parts = []
-        for index, chunk in enumerate(chunks):
-            if index:
-                time.sleep(0.5)
-            audio_parts.append(self._create_mp3_chunk(chunk))
+        is_first_chunk = True
+        for segment_text, speed in segments:
+            chunks = _chunk_text(segment_text)
+            for chunk in chunks:
+                if not is_first_chunk:
+                    time.sleep(0.5)
+                audio_parts.append(self._create_mp3_chunk(chunk, speed=speed))
+                is_first_chunk = False
 
         return b"".join(audio_parts)
 
-    def _create_mp3_chunk(self, text: str) -> bytes:
+    def _create_mp3_chunk(self, text: str, *, speed: float) -> bytes:
         payload = {
             "model": self.model,
             "voice": self.voice,
             "input": text,
             "response_format": "mp3",
+            "speed": speed,
         }
         request = Request(
             self.base_url,
@@ -59,11 +69,25 @@ def _normalize_script_for_speech(script: str) -> str:
         if not line or line == "---":
             continue
         if line.startswith("#"):
-            line = line.lstrip("#").strip()
+            continue
         line = line.replace("**", "")
         lines.append(line)
 
     return "\n\n".join(lines)
+
+
+def _speech_segments(script: str) -> list[tuple[str, float]]:
+    normalized = _normalize_script_for_speech(script)
+    opening = FIXED_DAILY_PODCAST_OPENING.strip()
+
+    if normalized.startswith(opening):
+        rest = normalized[len(opening) :].strip()
+        segments = [(opening, FAST_OPENING_SPEED)]
+        if rest:
+            segments.append((rest, NORMAL_PODCAST_SPEED))
+        return segments
+
+    return [(normalized, NORMAL_PODCAST_SPEED)] if normalized else []
 
 
 def _chunk_text(text: str, max_chars: int = 900) -> list[str]:

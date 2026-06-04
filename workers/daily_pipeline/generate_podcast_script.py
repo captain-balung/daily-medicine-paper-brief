@@ -3,6 +3,7 @@ import argparse
 from workers.ai_analysis.anthropic_client import AnthropicClient
 from workers.shared.config import load_settings
 from workers.shared.persistence import PipelineRepository
+from workers.shared.podcast_style import FIXED_DAILY_PODCAST_OPENING
 from workers.shared.supabase_rest import SupabaseRestClient
 
 
@@ -32,11 +33,12 @@ def generate_daily_podcast_script(briefing_id: str) -> str:
         raise RuntimeError(f"Daily briefing not found: {briefing_id}")
 
     client = AnthropicClient(settings)
-    script = client.create_text(
+    generated_body = client.create_text(
         system=SYSTEM_PROMPT,
         user=_podcast_prompt(bundle),
         max_tokens=2200,
     )
+    script = f"{FIXED_DAILY_PODCAST_OPENING}\n\n{generated_body.strip()}"
     podcast_id = repository.save_daily_podcast_script(
         briefing_id=briefing_id,
         title=f"{bundle['briefing']['briefing_date']} Daily Medicine Podcast Script",
@@ -84,12 +86,11 @@ Hard length rules:
 - Do not read journal names, PMID, DOI, or long disclaimers aloud unless essential.
 
 Required structure:
-1. Opening, about 15 seconds: date, scope, and one brief source/safety sentence.
-2. Today's three themes, about 30 seconds: exactly three spoken bullets.
-3. Top three articles: for each article, answer what was asked, how it was studied, what was found, why it matters, and the key limitation.
-4. Short deep-dive bridge: one concise paragraph connecting clinical meaning or mechanism across the papers.
-5. Take-home messages, about 20 seconds: exactly three short points.
-6. Closing notice: one sentence only, saying this is AI-assisted literature briefing based on abstracts, metadata, and source links, not clinical decision advice.
+1. Start directly with today's three themes, about 30 seconds: exactly three spoken bullets.
+2. Top three articles: for each article, answer what was asked, how it was studied, what was found, why it matters, and the key limitation.
+3. Short deep-dive bridge: one concise paragraph connecting clinical meaning or mechanism across the papers.
+4. Take-home messages, about 20 seconds: exactly three short points.
+5. Closing notice: one sentence only, saying this is AI-assisted literature briefing based on abstracts, metadata, and source links, not clinical decision advice.
 
 Style:
 - Conversational but professional.
@@ -98,6 +99,7 @@ Style:
 - Use paragraph breaks suitable for reading aloud.
 - Keep English medical terms where they improve precision.
 - Do not mention audio production or TTS.
+- Do not write a host introduction, greeting, or opening monologue. A fixed opening will be inserted before your script.
 
 Briefing:
 date: {briefing.get("briefing_date")}
