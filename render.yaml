@@ -24,7 +24,9 @@ services:
       - key: TTS_MODEL
         value: gpt-4o-mini-tts
       - key: TTS_VOICE
-        value: alloy
+        value: marin
+      - key: PYTHONIOENCODING
+        value: utf-8
       - key: PODCAST_AUDIO_BUCKET
         value: podcast-audio
       - key: PODCAST_VIDEO_BUCKET
