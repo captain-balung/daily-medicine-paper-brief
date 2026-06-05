@@ -1,6 +1,6 @@
 # Daily Medicine Paper Brief Roadmap
 
-Last updated: 2026-06-04
+Last updated: 2026-06-05
 
 ## Current Status
 
@@ -60,8 +60,16 @@ Production:
 - OpenAI TTS defaults to `marin`, uses segment-specific voice instructions, and reads the main briefing body at 1.05x speed.
 - Manual OpenAI TTS audio generation is implemented.
 - MP3 files are uploaded to Supabase Storage.
+- MP4 podcast videos are generated from daily briefing visual cards and podcast audio.
+- MP4 files are uploaded to Supabase Storage bucket `podcast-videos`.
 - Homepage and daily pages display the podcast script and audio player when audio is available.
+- Homepage and daily pages display a video player when podcast video is available.
 - Render daily pipeline generates podcast audio after the script when `OPENAI_API_KEY` is configured.
+- Render daily pipeline generates podcast video after podcast audio.
+- `/admin/status` shows podcast video readiness.
+- Render Cron now installs `workers/requirements.txt`, including `pillow` and `imageio-ffmpeg`.
+- Render Cron environment was updated to `TTS_VOICE=marin`, `PYTHONIOENCODING=utf-8`, and `PODCAST_VIDEO_BUCKET=podcast-videos`.
+- Render CLI is installed locally at `C:\Users\Cool\.local\bin\render.exe` and authenticated as `captain.balung@gmail.com`.
 
 ## Deferred
 
@@ -73,16 +81,20 @@ Production:
 
 ## Next Recommended Work
 
-1. Listen to the next 7-minute podcast script/audio and confirm the shorter length feels right.
-2. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
-3. Review ranking rationale wording with physician feedback.
-4. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
-5. Explore weekly briefing once daily review stabilizes.
+1. Verify the next scheduled Render Cron run on 2026-06-06 at 06:30 Taiwan time.
+2. Confirm the next automated audio uses `marin` and the current podcast speed settings.
+3. Review the next automated MP4 on the Daily page and decide whether the visual-card format is good enough for continued use.
+4. Tune OpenAI TTS voice, speed, and pronunciation for medical terms if needed.
+5. Review ranking rationale wording with physician feedback.
+6. Review copyright-safe wording with legal or publisher-policy feedback if the project becomes public-facing beyond friend review.
+7. Explore weekly briefing once daily review stabilizes.
 
 ## Operating Notes
 
 - The first version now includes daily briefing, podcast script, and optional OpenAI TTS audio.
+- The current version also includes optional Supabase-hosted podcast video.
 - Audio generation is optional in the pipeline and is skipped if `OPENAI_API_KEY` is not configured.
+- Video generation depends on podcast audio and Python packages from `workers/requirements.txt`.
 - Physician feedback can be collected conversationally; no feedback UI is planned for now.
 - Pipeline status is public read-only and does not expose backend secrets.
 - Do not expose backend secrets in Vercel or the browser.
