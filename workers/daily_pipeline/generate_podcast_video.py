@@ -12,9 +12,9 @@ from workers.shared.persistence import PipelineRepository
 from workers.shared.supabase_rest import SupabaseRestClient
 
 
-WIDTH = 1920
-HEIGHT = 1080
-MARGIN_X = 220
+WIDTH = 1280
+HEIGHT = 720
+MARGIN_X = 96
 ACCENT = (15, 118, 110)
 ACCENT_DARK = (17, 94, 89)
 BACKGROUND = (247, 248, 250)
@@ -86,11 +86,11 @@ def _download(url: str, path: Path) -> None:
 def _render_slides(
     work_dir: Path, bundle: dict, podcast: dict, settings: Settings
 ) -> list[Path]:
-    font_regular = _load_font(settings, 42)
-    font_medium = _load_font(settings, 50)
-    font_large = _load_font(settings, 76)
-    font_small = _load_font(settings, 32)
-    font_tiny = _load_font(settings, 26)
+    font_regular = _load_font(settings, 28)
+    font_medium = _load_font(settings, 34)
+    font_large = _load_font(settings, 50)
+    font_small = _load_font(settings, 22)
+    font_tiny = _load_font(settings, 18)
 
     briefing = bundle["briefing"]
     must_read_items = [
@@ -155,19 +155,19 @@ def _slide_title(
 ) -> Path:
     image, draw = _base_slide()
     _brand(draw, font_small)
-    draw.text((MARGIN_X, 250), briefing["title"], font=font_large, fill=FOREGROUND)
+    draw.text((MARGIN_X, 150), briefing["title"], font=font_large, fill=FOREGROUND)
     _draw_wrapped(
         draw,
         _format_summary(briefing.get("summary") or ""),
-        (MARGIN_X, 370),
+        (MARGIN_X, 240),
         font_regular,
         MUTED,
         max_width=WIDTH - MARGIN_X * 2,
-        line_gap=18,
+        line_gap=12,
         max_lines=4,
     )
-    _draw_card(draw, (MARGIN_X, 610, WIDTH - MARGIN_X, 820))
-    draw.text((MARGIN_X + 44, 655), "Source window", font=font_medium, fill=FOREGROUND)
+    _draw_card(draw, (MARGIN_X, 430, WIDTH - MARGIN_X, 560))
+    draw.text((MARGIN_X + 28, 465), "Source window", font=font_medium, fill=FOREGROUND)
     source_window = (
         f"{_format_timestamp(briefing.get('source_window_start'))} to "
         f"{_format_timestamp(briefing.get('source_window_end'))}"
@@ -175,10 +175,10 @@ def _slide_title(
     _draw_wrapped(
         draw,
         source_window,
-        (MARGIN_X + 44, 735),
+        (MARGIN_X + 28, 520),
         font_small,
         MUTED,
-        max_width=WIDTH - MARGIN_X * 2 - 88,
+        max_width=WIDTH - MARGIN_X * 2 - 56,
     )
     image.save(path)
     return path
@@ -194,17 +194,17 @@ def _slide_ranking(
 ) -> Path:
     image, draw = _base_slide()
     _brand(draw, font_small)
-    draw.text((MARGIN_X, 170), "Today's Top Ranking", font=font_medium, fill=FOREGROUND)
-    y = 280
+    draw.text((MARGIN_X, 105), "Today's Top Ranking", font=font_medium, fill=FOREGROUND)
+    y = 175
     for index, item in enumerate(items, start=1):
         article = item.get("article") or {}
         score = item.get("score") or {}
         title = article.get("title_zh") or article.get("title") or "Untitled"
         rationale = score.get("scoring_rationale") or item.get("item_summary") or ""
-        _draw_card(draw, (MARGIN_X, y, WIDTH - MARGIN_X, y + 190))
-        draw.text((MARGIN_X + 36, y + 38), str(index), font=font_medium, fill=ACCENT_DARK)
+        _draw_card(draw, (MARGIN_X, y, WIDTH - MARGIN_X, y + 118))
+        draw.text((MARGIN_X + 24, y + 25), str(index), font=font_medium, fill=ACCENT_DARK)
         draw.text(
-            (MARGIN_X + 110, y + 34),
+            (MARGIN_X + 72, y + 25),
             f"Score {score.get('total_score', '-')}",
             font=font_tiny,
             fill=ACCENT_DARK,
@@ -212,23 +212,23 @@ def _slide_ranking(
         _draw_wrapped(
             draw,
             title,
-            (MARGIN_X + 110, y + 72),
+            (MARGIN_X + 72, y + 54),
             font_regular,
             FOREGROUND,
-            max_width=600,
+            max_width=430,
             max_lines=2,
         )
         _draw_wrapped(
             draw,
             rationale,
-            (MARGIN_X + 760, y + 42),
+            (MARGIN_X + 540, y + 28),
             font_small,
             MUTED,
-            max_width=700,
+            max_width=500,
             max_lines=4,
-            line_gap=10,
+            line_gap=7,
         )
-        y += 220
+        y += 132
     image.save(path)
     return path
 
@@ -250,7 +250,7 @@ def _slide_article(
     title = article.get("title_zh") or article.get("title") or "Untitled"
 
     draw.text(
-        (MARGIN_X, 150),
+        (MARGIN_X, 95),
         f"Featured Analysis #{index}",
         font=font_medium,
         fill=ACCENT_DARK,
@@ -258,12 +258,12 @@ def _slide_article(
     _draw_wrapped(
         draw,
         title,
-        (MARGIN_X, 235),
+        (MARGIN_X, 150),
         font_medium,
         FOREGROUND,
         max_width=WIDTH - MARGIN_X * 2,
         max_lines=3,
-        line_gap=16,
+        line_gap=10,
     )
     metadata = "  ".join(
         value
@@ -275,31 +275,31 @@ def _slide_article(
         ]
         if value
     )
-    _draw_wrapped(draw, metadata, (MARGIN_X, 430), font_tiny, MUTED, max_width=1450)
-    _draw_card(draw, (MARGIN_X, 500, WIDTH - MARGIN_X, 835))
+    _draw_wrapped(draw, metadata, (MARGIN_X, 285), font_tiny, MUTED, max_width=980)
+    _draw_card(draw, (MARGIN_X, 340, WIDTH - MARGIN_X, 570))
     _draw_wrapped(
         draw,
         summary.get("clinical_implications")
         or summary.get("one_sentence_summary")
         or item.get("item_summary")
         or "",
-        (MARGIN_X + 44, 545),
+        (MARGIN_X + 28, 375),
         font_regular,
         FOREGROUND,
-        max_width=WIDTH - MARGIN_X * 2 - 88,
+        max_width=WIDTH - MARGIN_X * 2 - 56,
         max_lines=5,
-        line_gap=16,
+        line_gap=10,
     )
     limitation = summary.get("limitations")
     if limitation:
-        draw.text((MARGIN_X + 44, 760), "Limitation", font=font_tiny, fill=ACCENT_DARK)
+        draw.text((MARGIN_X + 28, 515), "Limitation", font=font_tiny, fill=ACCENT_DARK)
         _draw_wrapped(
             draw,
             limitation,
-            (MARGIN_X + 220, 756),
+            (MARGIN_X + 140, 512),
             font_tiny,
             MUTED,
-            max_width=980,
+            max_width=760,
             max_lines=2,
         )
     image.save(path)
@@ -315,8 +315,8 @@ def _slide_notice(
 ) -> Path:
     image, draw = _base_slide()
     _brand(draw, font_small)
-    draw.text((MARGIN_X, 220), "Content and source notice", font=font_medium, fill=FOREGROUND)
-    _draw_card(draw, (MARGIN_X, 330, WIDTH - MARGIN_X, 760), fill=WARNING_BG)
+    draw.text((MARGIN_X, 145), "Content and source notice", font=font_medium, fill=FOREGROUND)
+    _draw_card(draw, (MARGIN_X, 235, WIDTH - MARGIN_X, 540), fill=WARNING_BG)
     notice = (
         "This video is an AI-assisted medical literature briefing based on "
         "article metadata, source links, and generated summaries. It is not "
@@ -326,16 +326,16 @@ def _slide_notice(
     _draw_wrapped(
         draw,
         notice,
-        (MARGIN_X + 48, 400),
+        (MARGIN_X + 32, 285),
         font_regular,
         WARNING_TEXT,
-        max_width=WIDTH - MARGIN_X * 2 - 96,
+        max_width=WIDTH - MARGIN_X * 2 - 64,
         max_lines=6,
-        line_gap=18,
+        line_gap=12,
     )
     if podcast.get("voice_name"):
         draw.text(
-            (MARGIN_X + 48, 670),
+            (MARGIN_X + 32, 475),
             f"AI voice: {podcast['voice_name']}",
             font=font_small,
             fill=WARNING_TEXT,
@@ -378,19 +378,23 @@ def _compose_video(
         "-t",
         str(duration_seconds),
         "-vf",
-        "scale=1920:1080,setsar=1,format=yuv420p",
+        f"scale={WIDTH}:{HEIGHT},setsar=1,format=yuv420p",
         "-r",
-        "30",
+        "24",
         "-c:v",
         "libx264",
+        "-threads",
+        "1",
         "-preset",
-        "medium",
+        "veryfast",
         "-crf",
-        "23",
+        "28",
         "-c:a",
         "aac",
         "-b:a",
-        "192k",
+        "96k",
+        "-movflags",
+        "+faststart",
         str(output_path),
     ]
     subprocess.run(command, check=True)
@@ -403,8 +407,8 @@ def _base_slide() -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 
 def _brand(draw: ImageDraw.ImageDraw, font: ImageFont.FreeTypeFont) -> None:
-    draw.text((MARGIN_X, 70), "Daily Medicine Paper Brief", font=font, fill=FOREGROUND)
-    draw.line((MARGIN_X, 120, WIDTH - MARGIN_X, 120), fill=BORDER, width=2)
+    draw.text((MARGIN_X, 42), "Daily Medicine Paper Brief", font=font, fill=FOREGROUND)
+    draw.line((MARGIN_X, 78, WIDTH - MARGIN_X, 78), fill=BORDER, width=2)
 
 
 def _draw_card(
@@ -412,7 +416,7 @@ def _draw_card(
     box: tuple[int, int, int, int],
     fill: tuple[int, int, int] = SURFACE,
 ) -> None:
-    draw.rounded_rectangle(box, radius=18, fill=fill, outline=BORDER, width=2)
+    draw.rounded_rectangle(box, radius=10, fill=fill, outline=BORDER, width=2)
 
 
 def _draw_wrapped(

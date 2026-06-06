@@ -77,15 +77,30 @@ def run_full_daily_pipeline(ai_limit: int, dry_run: bool = False) -> int:
                 step_name="daily_podcast_audio",
                 message=f"Generated daily podcast audio for script {podcast_id}.",
             )
-        video_url = generate_podcast_video(podcast_id)
-        print(f"daily_podcast_video={video_url}")
-        if job_id:
-            repository.log_event(
-                job_id,
-                event_type="info",
-                step_name="daily_podcast_video",
-                message=f"Generated daily podcast video for script {podcast_id}.",
-            )
+        try:
+            video_url = generate_podcast_video(podcast_id)
+            print(f"daily_podcast_video={video_url}")
+            if job_id:
+                repository.log_event(
+                    job_id,
+                    event_type="info",
+                    step_name="daily_podcast_video",
+                    message=f"Generated daily podcast video for script {podcast_id}.",
+                )
+        except Exception as exc:
+            print(f"daily_podcast_video=failed:{exc}")
+            if job_id:
+                repository.update_job_counts(
+                    job_id,
+                    total_failed=ai_result["failed"] + 1,
+                )
+                repository.log_event(
+                    job_id,
+                    event_type="error",
+                    step_name="daily_podcast_video",
+                    message=f"Failed to generate daily podcast video: {exc}",
+                    metadata={"podcast_id": podcast_id},
+                )
     else:
         print("daily_podcast_audio=skipped:missing_openai_api_key")
         if job_id:
