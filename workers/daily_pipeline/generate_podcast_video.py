@@ -476,10 +476,14 @@ def _format_timestamp(value: str | None) -> str:
     return value.replace("T", " ").replace("+00:00", " UTC")
 
 
+BUNDLED_FONT = Path(__file__).resolve().parent.parent / "assets" / "NotoSansCJKtc-Regular.otf"
+
+
 def _load_font(settings: Settings, size: int) -> ImageFont.FreeTypeFont:
     candidates = []
     if settings.video_font_path:
         candidates.append(Path(settings.video_font_path))
+    candidates.append(BUNDLED_FONT)
     candidates.extend(
         [
             Path("C:/Windows/Fonts/msjh.ttc"),

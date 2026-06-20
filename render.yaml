@@ -31,6 +31,8 @@ services:
         value: podcast-audio
       - key: PODCAST_VIDEO_BUCKET
         value: podcast-videos
+      - key: VIDEO_FONT_PATH
+        value: workers/assets/NotoSansCJKtc-Regular.otf
       - key: UNPAYWALL_EMAIL
         value: captain.balung@gmail.com
       - key: CROSSREF_MAILTO
